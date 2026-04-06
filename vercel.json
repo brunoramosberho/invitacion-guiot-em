@@ -6,10 +6,6 @@
   "functions": {
     "api/invite.js": {
       "includeFiles": "api/invite-template.html"
-    },
-    "api/og.js": {
-      "includeFiles": "assets/og-preview.png",
-      "maxDuration": 30
     }
   }
 }

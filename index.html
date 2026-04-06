@@ -3,18 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invitación · giot × Expresso Martínez · SS26</title>
-  <meta name="description" content="Inauguración de Colección SS26 — giot × Expresso Martínez · 18 Jun 2026 · Madrid">
+  <title>Invitación exclusiva · giot × Expresso Martínez · SS26</title>
+  <meta name="description" content="Inauguración de Colección SS26 — giot × Expresso Martínez · Jue 18 Jun 2026, 20:00 h · Expresso Martínez, Chamberí, Madrid. Solo con invitación nominal.">
+  <meta name="author" content="giot × Expresso Martínez">
+  <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="dark">
+  <meta name="format-detection" content="telephone=no">
 
-  <meta property="og:title" content="Estás invitado/a · giot × Expresso Martínez">
-  <meta property="og:description" content="Inauguración de Colección SS26 — Jue 18 Jun 2026 · 20:00h · Madrid">
   <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Estás invitado/a · giot × Expresso Martínez">
-  <meta name="twitter:description" content="Inauguración de Colección SS26 — Jue 18 Jun 2026 · 20:00h · Madrid">
+  <meta property="og:site_name" content="giot × Expresso Martínez">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:title" content="Invitación exclusiva · giot × Expresso Martínez">
+  <meta property="og:description" content="Una invitación nominal a la inauguración SS26. Jue 18 Jun 2026 · 20:00 h · Expresso Martínez · Chamberí, Madrid.">
+  <meta property="og:image" content="assets/og-preview.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sobre lacrado giot × EM: invitación exclusiva a la inauguración SS26 en Madrid.">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✉️</text></svg>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Invitación exclusiva · giot × Expresso Martínez">
+  <meta name="twitter:description" content="Inauguración SS26 · 18 Jun 2026 · 20:00 h · Madrid. Solo con invitación nominal.">
+  <meta name="twitter:image" content="assets/og-preview.png">
+  <meta name="twitter:image:alt" content="Sobre lacrado giot × EM, invitación SS26 Madrid.">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="giot × EM">
+  <meta name="application-name" content="giot × EM">
   <meta name="theme-color" content="#080706">
+  <meta name="msapplication-TileColor" content="#080706">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -319,6 +337,38 @@ const guest = new URLSearchParams(location.search).get('n') || 'Invitado/a';
 document.getElementById('guestPre').textContent = guest;
 document.getElementById('guestAddr').textContent = guest;
 document.getElementById('guestTicket').textContent = guest;
+
+document.title = `Invitación · ${guest} · giot × EM`;
+
+(function () {
+  var pageUrl = location.href.split('#')[0];
+  var ogUrl = document.createElement('meta');
+  ogUrl.setAttribute('property', 'og:url');
+  ogUrl.setAttribute('content', pageUrl);
+  document.head.appendChild(ogUrl);
+  var u = new URL(pageUrl);
+  u.hash = '';
+  var p = u.pathname;
+  if (!p.endsWith('/')) u.pathname = p.replace(/\/[^/]*$/, '/') || '/';
+  var absImg = new URL('assets/og-preview.png', u.href).href;
+  document.querySelectorAll('meta[property="og:image"], meta[name="twitter:image"]').forEach(function (m) {
+    m.setAttribute('content', absImg);
+  });
+  if (guest !== 'Invitado/a') {
+    var blurb =
+      guest +
+      ' — Inauguración SS26 · giot × Expresso Martínez · 18 Jun 2026, 20:00 h · Madrid. Solo con invitación.';
+    var title = 'Invitación exclusiva para ' + guest + ' · giot × Expresso Martínez';
+    document.querySelector('meta[name="description"]')?.setAttribute('content', blurb);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', blurb);
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', blurb);
+    var alt = 'Invitación exclusiva para ' + guest + ': giot × Expresso Martínez, SS26, Madrid.';
+    document.querySelector('meta[property="og:image:alt"]')?.setAttribute('content', alt);
+    document.querySelector('meta[name="twitter:image:alt"]')?.setAttribute('content', alt);
+  }
+})();
 
 const bc=document.getElementById('rBc');
 [3,1,2,1,3,2,1,3,1,2,3,1,1,2,3,1,2,1,3,1,2,2,1,3,1,2,1,3,2].forEach((w,i)=>{

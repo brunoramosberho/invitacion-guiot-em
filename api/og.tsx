@@ -9,9 +9,67 @@ function sanitizeGuest(raw: string | null): string {
   return s || 'Invitado/a';
 }
 
+/** Vercel Edge a veces entrega `request.url` sin query; otras cabeceras conservan ?n=. */
+function extractParamN(request: Request): string | null {
+  const headerUrls = [
+    request.headers.get('x-vercel-forwarded-url'),
+    request.headers.get('x-forwarded-uri'),
+    request.headers.get('x-original-url'),
+    request.headers.get('x-invoke-path'),
+    request.url,
+  ].filter(Boolean) as string[];
+
+  for (const raw of headerUrls) {
+    const m = /[?&]n=([^&]*)/.exec(raw);
+    if (m) {
+      let v = m[1].replace(/\+/g, ' ');
+      try {
+        v = decodeURIComponent(v);
+      } catch {
+        /* valor ya plano */
+      }
+      const t = v.normalize('NFKC').trim();
+      if (t) return t;
+    }
+  }
+
+  for (const raw of headerUrls) {
+    if (!raw.startsWith('http')) continue;
+    try {
+      const n = new URL(raw).searchParams.get('n');
+      if (n && n.trim()) return n.trim();
+    } catch {
+      /* ignore */
+    }
+  }
+
+  try {
+    const u = new URL(
+      request.url,
+      `https://${request.headers.get('host') || 'localhost'}/`
+    );
+    const n = u.searchParams.get('n');
+    if (n && n.trim()) return n.trim();
+  } catch {
+    /* ignore */
+  }
+
+  return null;
+}
+
+function requestOrigin(request: Request): string {
+  const host = request.headers.get('host') || request.headers.get('x-forwarded-host');
+  const proto = request.headers.get('x-forwarded-proto') || 'https';
+  if (host) return `${proto}://${host}`;
+  try {
+    return new URL(request.url).origin;
+  } catch {
+    return 'https://localhost';
+  }
+}
+
 export default async function handler(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const guest = sanitizeGuest(searchParams.get('n'));
+  const guest = sanitizeGuest(extractParamN(request));
   const nameSize = guest.length <= 18 ? 68 : Math.max(36, 68 - (guest.length - 18) * 2);
   const nameMd = Math.max(20, Math.min(28, Math.round(nameSize * 0.45)));
 
@@ -216,11 +274,13 @@ export default async function handler(request: Request) {
       status: 200,
       headers: {
         'Content-Type': 'image/png',
-        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
+        'Cache-Control': 'private, no-cache, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Vercel-CDN-Cache-Control': 'no-store',
       },
     });
   } catch {
-    const r = await fetch(new URL('/assets/og-preview.png', request.url));
+    const r = await fetch(`${requestOrigin(request)}/assets/og-preview.png`);
     if (!r.ok) {
       return new Response('og_fallback_failed', { status: 502 });
     }
@@ -229,7 +289,8 @@ export default async function handler(request: Request) {
       status: 200,
       headers: {
         'Content-Type': 'image/png',
-        'Cache-Control': 'public, s-maxage=600',
+        'Cache-Control': 'private, no-cache, max-age=0',
+        'CDN-Cache-Control': 'no-store',
       },
     });
   }

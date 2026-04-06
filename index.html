@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invitación · giot × Expresso Martínez · SS26</title>
+  <meta name="description" content="Inauguración de Colección SS26 — giot × Expresso Martínez · 18 Jun 2026 · Madrid">
+
+  <meta property="og:title" content="Estás invitado/a · giot × Expresso Martínez">
+  <meta property="og:description" content="Inauguración de Colección SS26 — Jue 18 Jun 2026 · 20:00h · Madrid">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Estás invitado/a · giot × Expresso Martínez">
+  <meta name="twitter:description" content="Inauguración de Colección SS26 — Jue 18 Jun 2026 · 20:00h · Madrid">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✉️</text></svg>">
+  <meta name="theme-color" content="#080706">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{
+      height:100%;
+      background:#080706;
+      display:flex;align-items:center;justify-content:center;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .wrap{
+      background:#080706;
+      border-radius:12px;
+      padding:36px 20px 44px;
+      display:flex;flex-direction:column;align-items:center;
+      font-family:'IBM Plex Mono',monospace;
+      position:relative;overflow:hidden;
+      width:100%;max-width:420px;
+    }
+    .wrap::after{content:'';position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 35%,rgba(0,0,0,.6) 100%);}
+
+    .pre-lbl{font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:10px;}
+    .pre-para{font-family:'IM Fell English',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,.35);margin-bottom:2px;}
+    .pre-name{font-family:'IM Fell English',serif;font-style:italic;font-size:20px;color:rgba(255,255,255,.78);margin-bottom:28px;}
+
+    .env-scene{perspective:1100px;perspective-origin:50% 35%;}
+
+    .env-tilt{
+      transform-style:preserve-3d;
+      transform:rotateX(14deg) rotateY(-6deg);
+      transition:transform 0.9s cubic-bezier(.22,1,.36,1);
+      position:relative;
+    }
+    .env-tilt.pickup{transform:rotateX(20deg) rotateY(-3deg) translateY(-14px);}
+
+    .env-shadow{
+      position:absolute;bottom:-20px;left:12%;right:12%;
+      height:22px;background:rgba(0,0,0,.5);
+      filter:blur(12px);border-radius:50%;
+      transition:all 0.9s ease;
+    }
+    .env-tilt.pickup .env-shadow{bottom:-32px;filter:blur(24px);opacity:.65;left:18%;right:18%;}
+
+    .envelope{
+      width:min(340px, 88vw);height:232px;
+      position:relative;
+      overflow:hidden;
+      transition:overflow 0s 1.9s;
+    }
+    .envelope.open-overflow{ overflow:visible; }
+
+    .env-face{
+      position:absolute;inset:0;
+      background:#151311;
+      border:1px solid rgba(255,240,190,.13);
+      border-radius:3px;
+      z-index:6;
+    }
+    .fold-l{position:absolute;inset:0;background:rgba(255,255,255,.036);clip-path:polygon(0 0,0 100%,50% 50%);}
+    .fold-r{position:absolute;inset:0;background:rgba(255,255,255,.036);clip-path:polygon(100% 0,100% 100%,50% 50%);}
+    .fold-b{position:absolute;inset:0;background:rgba(255,255,255,.05);clip-path:polygon(0 100%,100% 100%,50% 50%);}
+    .fold-l::after,.fold-r::after{content:'';position:absolute;background:rgba(255,255,255,.07);width:1px;}
+    .fold-l::after{height:155px;bottom:0;right:0;transform-origin:bottom right;transform:rotate(-40deg);}
+    .fold-r::after{height:155px;bottom:0;left:0;transform-origin:bottom left;transform:rotate(40deg);}
+
+    .env-glow{
+      position:absolute;inset:0;
+      background:radial-gradient(ellipse 80% 55% at 50% 85%,rgba(245,230,190,.14),transparent 70%);
+      opacity:0;transition:opacity .9s;
+      z-index:7;pointer-events:none;
+    }
+
+    .env-from{position:absolute;top:14px;left:16px;z-index:8;}
+    .env-from span{font-size:5.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.18);display:block;margin-bottom:2px;}
+    .env-from strong{font-family:'IM Fell English',serif;font-style:italic;font-weight:400;font-size:9.5px;color:rgba(255,255,255,.28);}
+
+    .env-seal{
+      position:absolute;top:50%;right:24px;transform:translateY(-50%);
+      width:60px;height:60px;
+      border:2px solid rgba(200,40,30,.7);border-radius:50%;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      z-index:8;
+      transition:opacity .4s .1s,transform .5s .1s;
+    }
+    .env-seal.gone{opacity:0;transform:translateY(-50%) scale(.58);}
+    .seal-m{font-family:'IM Fell English',serif;font-size:8.5px;color:rgba(200,40,30,.84);text-align:center;line-height:1.4;}
+    .seal-s{font-size:5.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(200,40,30,.48);margin-top:1px;}
+
+    .env-addr{position:absolute;bottom:22px;left:20px;z-index:8;}
+    .addr-to{font-size:5.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:2px;}
+    .addr-name{font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.68);}
+    .addr-sub{font-size:5.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.16);margin-top:3px;}
+
+    .env-letter{
+      position:absolute;
+      bottom:0;left:20px;right:20px;
+      height:215px;
+      background:#f5f0e8;
+      border-radius:2px 2px 0 0;
+      z-index:2;
+      padding:14px 16px 10px;
+      display:flex;flex-direction:column;gap:7px;
+    }
+    .lt-venue{font-family:'IM Fell English',serif;font-style:italic;font-size:12px;color:#1a1a18;border-bottom:1px dashed rgba(0,0,0,.14);padding-bottom:7px;text-align:center;}
+    .lt-collab{font-family:'IM Fell English',serif;font-size:19px;color:#1a1a18;text-align:center;}
+    .lt-collab .x{color:#c8281e;font-style:normal;margin:0 2px;font-size:15px;}
+    .lt-sub{font-size:6.5px;letter-spacing:.13em;text-transform:uppercase;color:#9a9a94;text-align:center;}
+    .lt-rows{display:flex;flex-direction:column;gap:5px;margin-top:3px;}
+    .lt-row{display:flex;justify-content:space-between;font-size:7px;color:#5a5a54;}
+    .lt-row b{color:#1a1a18;font-weight:400;text-transform:uppercase;letter-spacing:.06em;}
+    .lt-date{font-size:7.5px;letter-spacing:.08em;color:#5a5a54;text-align:center;margin-top:auto;border-top:1px dashed rgba(0,0,0,.12);padding-top:7px;}
+
+    .env-letter.rise{
+      transition:transform 1.3s cubic-bezier(.22,1,.36,1);
+      transform:translateY(-138px) rotate(-0.5deg);
+    }
+    .env-letter.straight{
+      transition:transform .5s ease;
+      transform:translateY(-138px) rotate(0deg);
+    }
+
+    .env-flap{
+      position:absolute;top:-1px;left:-1px;right:-1px;
+      height:148px;
+      background:#1e1c17;
+      border:1px solid rgba(255,240,190,.12);
+      clip-path:polygon(0 0,100% 0,50% 100%);
+      transform-origin:50% 0%;
+      transform:perspective(900px) rotateX(0deg);
+      backface-visibility:hidden;
+      z-index:25;
+    }
+    .env-flap::before{content:'';position:absolute;inset:0;
+      background:linear-gradient(160deg,rgba(255,255,255,.07),transparent 45%,rgba(0,0,0,.06) 100%);}
+
+    @keyframes flapSpring{
+      0%  {transform:perspective(900px) rotateX(0deg);}
+      48% {transform:perspective(900px) rotateX(-194deg);}
+      66% {transform:perspective(900px) rotateX(-160deg);}
+      80% {transform:perspective(900px) rotateX(-184deg);}
+      90% {transform:perspective(900px) rotateX(-170deg);}
+      100%{transform:perspective(900px) rotateX(-178deg);}
+    }
+    .env-flap.open{animation:flapSpring 1.7s cubic-bezier(.25,0,.25,1) forwards;}
+
+    .open-btn{
+      margin-top:32px;
+      padding:14px 44px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.3);
+      color:rgba(255,255,255,.88);
+      font-family:'IBM Plex Mono',monospace;
+      font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+      cursor:pointer;border-radius:2px;
+      transition:all .25s;
+      position:relative;z-index:10;
+    }
+    .open-btn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.52);}
+    .open-btn.gone{opacity:0;pointer-events:none;transition:opacity .2s;}
+
+    /* Ticket scene */
+    #tScene{display:none;flex-direction:column;align-items:center;width:100%;opacity:0;transition:opacity .8s;}
+    #tScene.show{display:flex;}
+    #tScene.visible{opacity:1;}
+    .rc-wrap{width:100%;max-width:320px;}
+    .re-e{height:13px;background:#f5f0e8;}
+    .re-t{background-image:radial-gradient(circle at 10px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 27px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 44px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 61px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 78px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 95px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 112px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 129px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 146px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 163px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 180px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 197px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 214px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 231px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 248px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 265px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 282px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 299px 100%,#080706 8px,transparent 9px),radial-gradient(circle at 316px 100%,#080706 8px,transparent 9px);}
+    .re-b{background-image:radial-gradient(circle at 10px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 27px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 44px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 61px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 78px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 95px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 112px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 129px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 146px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 163px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 180px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 197px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 214px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 231px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 248px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 265px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 282px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 299px 0%,#080706 8px,transparent 9px),radial-gradient(circle at 316px 0%,#080706 8px,transparent 9px);}
+    .rc-body{background:#f5f0e8;padding:6px 24px 16px;position:relative;overflow:hidden;}
+    .rc-body::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(0,0,0,.024) 27px,rgba(0,0,0,.024) 28px);pointer-events:none;}
+    .stamp{position:absolute;top:90px;right:-3px;width:60px;height:60px;border:2px solid #c8281e;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(14deg);opacity:.65;}
+    .stamp-t{font-size:5.5px;letter-spacing:.13em;text-transform:uppercase;color:#c8281e;line-height:1.45;text-align:center;}
+    .stamp-t strong{font-size:6.5px;display:block;}
+    .r-v{text-align:center;padding:11px 0;border-bottom:1px dashed rgba(0,0,0,.17);}
+    .r-vn{font-family:'IM Fell English',serif;font-style:italic;font-size:17px;color:#1a1a18;}
+    .r-va{font-size:6px;letter-spacing:.11em;text-transform:uppercase;color:#5a5a54;margin-top:4px;line-height:1.6;}
+    .r-tt{font-size:6.5px;letter-spacing:.2em;color:#9a9a94;text-transform:uppercase;text-align:center;padding:9px 0 2px;}
+    .r-cl{text-align:center;padding:2px 0 11px;border-bottom:1px dashed rgba(0,0,0,.17);}
+    .r-ct{font-family:'IM Fell English',serif;font-size:21px;color:#1a1a18;}
+    .r-ct .x{color:#c8281e;font-style:normal;margin:0 2px;font-size:16px;}
+    .r-cs{font-size:6.5px;letter-spacing:.13em;text-transform:uppercase;color:#5a5a54;margin-top:4px;}
+    .rows{padding:10px 0;border-bottom:1px dashed rgba(0,0,0,.17);}
+    .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:5px;}
+    .row:last-child{margin-bottom:0;}
+    .rl{font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#9a9a94;white-space:nowrap;flex-shrink:0;}
+    .rd{flex:1;border-bottom:1px dotted rgba(0,0,0,.14);margin:0 4px 2px;min-width:6px;}
+    .rv{font-size:8px;letter-spacing:.06em;color:#1a1a18;text-align:right;text-transform:uppercase;white-space:nowrap;}
+    .rv.red{color:#c8281e;font-weight:500;}
+    .rv.nm{font-family:'IM Fell English',serif;font-style:italic;font-size:11px;letter-spacing:0;text-transform:none;}
+    .r-tot{padding:10px 0 9px;border-bottom:1px dashed rgba(0,0,0,.17);display:flex;justify-content:space-between;align-items:center;}
+    .r-tl{font-size:6.5px;letter-spacing:.17em;text-transform:uppercase;color:#9a9a94;}
+    .r-tv{font-family:'IM Fell English',serif;font-style:italic;font-size:11.5px;color:#c8281e;}
+    .r-ft{padding:12px 0 3px;text-align:center;}
+    .r-tg{font-family:'IM Fell English',serif;font-style:italic;font-size:10px;color:#5a5a54;line-height:1.7;margin-bottom:10px;}
+    .r-bc{display:flex;justify-content:center;margin:9px 0 3px;}
+    .r-bn{font-size:6.5px;letter-spacing:.1em;color:#9a9a94;text-align:center;}
+    .r-lg{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.17);}
+    .lg-g{font-family:'IM Fell English',serif;font-size:14px;color:#1a1a18;}
+    .lg-e{font-family:'IM Fell English',serif;font-style:italic;font-size:10px;color:#5a5a54;text-align:right;line-height:1.4;}
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div id="eScene">
+    <p class="pre-lbl">tienes una invitación</p>
+    <p class="pre-para">Para:</p>
+    <p class="pre-name">Sofía García</p>
+
+    <div class="env-scene">
+      <div class="env-tilt" id="envTilt">
+        <div class="env-shadow"></div>
+
+        <div class="envelope" id="envelope">
+
+          <div class="env-face">
+            <div class="fold-l"></div>
+            <div class="fold-r"></div>
+            <div class="fold-b"></div>
+          </div>
+
+          <div class="env-glow" id="envGlow"></div>
+
+          <div class="env-from">
+            <span>De parte de</span>
+            <strong>giot × Expresso Martínez</strong>
+          </div>
+          <div class="env-seal" id="envSeal">
+            <div class="seal-m">giot<br>×&nbsp;EM</div>
+            <div class="seal-s">Jun 2026</div>
+          </div>
+          <div class="env-addr">
+            <div class="addr-to">Para</div>
+            <div class="addr-name">Sofía García</div>
+            <div class="addr-sub">Inauguración SS26 · Madrid</div>
+          </div>
+
+          <div class="env-letter" id="envLetter">
+            <div class="lt-venue">Expresso Martínez</div>
+            <div class="lt-collab">giot<span class="x">×</span>EM</div>
+            <div class="lt-sub">Inauguración de Colección SS26</div>
+            <div class="lt-rows">
+              <div class="lt-row"><span>Fecha</span><b>Jue 18 Jun 2026</b></div>
+              <div class="lt-row"><span>Hora</span><b>20:00 h</b></div>
+              <div class="lt-row"><span>Dress Code</span><b>Blanco · Negro</b></div>
+            </div>
+            <div class="lt-date">C. de Trafalgar, 17 · Chamberí · Madrid</div>
+          </div>
+
+          <div class="env-flap" id="envFlap"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <button class="open-btn" id="openBtn">✦ &nbsp;Abrir invitación&nbsp; ✦</button>
+  </div>
+
+  <div id="tScene">
+    <div class="rc-wrap">
+      <div class="re-e re-t"></div>
+      <div class="rc-body">
+        <div class="stamp"><span class="stamp-t"><strong>INVITADO/A</strong>Solo con<br>invitación</span></div>
+        <div class="r-v"><div class="r-vn">Expresso Martínez</div><div class="r-va">C. de Trafalgar, 17 · Chamberí · 28010 Madrid</div></div>
+        <div class="r-tt">— Invitación Especial —</div>
+        <div class="r-cl"><div class="r-ct">giot<span class="x">×</span>EM</div><div class="r-cs">Inauguración de Colección SS26</div></div>
+        <div class="rows">
+          <div class="row"><span class="rl">Invitada</span><span class="rd"></span><span class="rv nm">Sofía García</span></div>
+          <div class="row"><span class="rl">Colección</span><span class="rd"></span><span class="rv">Seda &amp; Organza</span></div>
+          <div class="row"><span class="rl">Fecha</span><span class="rd"></span><span class="rv">Jue 18 Jun 2026</span></div>
+          <div class="row"><span class="rl">Hora</span><span class="rd"></span><span class="rv">20:00 h</span></div>
+          <div class="row"><span class="rl">Lugar</span><span class="rd"></span><span class="rv">Expresso Martínez</span></div>
+          <div class="row"><span class="rl">Dress Code</span><span class="rd"></span><span class="rv red">Blanco · Negro</span></div>
+        </div>
+        <div class="rows">
+          <div class="row"><span class="rl">Espresso Martini</span><span class="rd"></span><span class="rv">Bienvenida</span></div>
+          <div class="row"><span class="rl">Tiramisú</span><span class="rd"></span><span class="rv">Mesa de acero</span></div>
+          <div class="row"><span class="rl">Photobooth B&amp;W</span><span class="rd"></span><span class="rv">Incluido</span></div>
+        </div>
+        <div class="r-tot"><span class="r-tl">Total a pagar</span><span class="r-tv">Solo con invitación</span></div>
+        <div class="r-ft">
+          <p class="r-tg">Timeless pieces. Designed to last.<br>Fashion, cocktails, conversation.</p>
+          <div class="r-bc" id="rBc"></div>
+          <div class="r-bn">GIOT-EM-2026 · 47291</div>
+        </div>
+        <div class="r-lg"><div class="lg-g">giot</div><div class="lg-e">Expresso<br>Martínez</div></div>
+      </div>
+      <div class="re-e re-b"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const bc=document.getElementById('rBc');
+[3,1,2,1,3,2,1,3,1,2,3,1,1,2,3,1,2,1,3,1,2,2,1,3,1,2,1,3,2].forEach((w,i)=>{
+  const b=document.createElement('div');
+  b.style.cssText=`height:30px;background:#1a1a18;width:${w*2}px;margin-right:${i%2===0?'2':'3'}px;flex-shrink:0;`;
+  bc.appendChild(b);
+});
+
+const tilt    = document.getElementById('envTilt');
+const envelope= document.getElementById('envelope');
+const flap    = document.getElementById('envFlap');
+const letter  = document.getElementById('envLetter');
+const glow    = document.getElementById('envGlow');
+const seal    = document.getElementById('envSeal');
+const eScene  = document.getElementById('eScene');
+const tScene  = document.getElementById('tScene');
+const btn     = document.getElementById('openBtn');
+
+btn.addEventListener('click', () => {
+  btn.classList.add('gone');
+  setTimeout(() => tilt.classList.add('pickup'), 80);
+  setTimeout(() => seal.classList.add('gone'), 320);
+  setTimeout(() => flap.classList.add('open'), 420);
+  setTimeout(() => { glow.style.opacity='1'; }, 1050);
+  setTimeout(() => envelope.classList.add('open-overflow'), 1900);
+  setTimeout(() => letter.classList.add('rise'), 1950);
+  setTimeout(() => { letter.classList.remove('rise'); letter.classList.add('straight'); }, 2900);
+  setTimeout(() => {
+    eScene.style.transition='opacity .65s';
+    eScene.style.opacity='0';
+    eScene.style.pointerEvents='none';
+  }, 3500);
+  setTimeout(() => {
+    eScene.style.display='none';
+    tScene.classList.add('show');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>tScene.classList.add('visible')));
+  }, 3950);
+});
+</script>
+</body>
+</html>

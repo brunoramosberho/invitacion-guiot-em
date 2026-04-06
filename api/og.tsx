@@ -18,6 +18,37 @@ function pathnameOnly(raw: string): string {
   }
 }
 
+function decodeOgToken(segment: string): string | null {
+  if (!segment || segment.length > 180) return null;
+  const clean = segment.replace(/[^A-Za-z0-9+/=_-]/g, '');
+  if (!clean) return null;
+  let b64 = clean.replace(/-/g, '+').replace(/_/g, '/');
+  const pad = (4 - (b64.length % 4)) % 4;
+  b64 += '='.repeat(pad);
+  try {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const s = new TextDecoder().decode(bytes);
+    const t = s.normalize('NFKC').trim();
+    return t || null;
+  } catch {
+    return null;
+  }
+}
+
+function guestFromTokenPath(pathname: string): string | null {
+  const m = /\/api\/og\/s\/([^/?#]+)/.exec(pathname);
+  if (!m) return null;
+  let seg = m[1];
+  try {
+    seg = decodeURIComponent(seg);
+  } catch {
+    /* ya plano */
+  }
+  return decodeOgToken(seg);
+}
+
 function guestFromInvitePath(pathname: string): string | null {
   const m = /\/api\/og\/i\/([^/?#]+)/.exec(pathname);
   if (!m) return null;
@@ -30,7 +61,7 @@ function guestFromInvitePath(pathname: string): string | null {
   }
 }
 
-/** Meta a veces pide la imagen sin ?n= en request.url; el nombre va en /api/og/i/<nombre>. */
+/** og:image usa /api/og/s/<base64url> para que los crawlers no pierdan el nombre. */
 function extractParamN(request: Request): string | null {
   const headerUrls = [
     request.headers.get('x-vercel-forwarded-url'),
@@ -41,8 +72,25 @@ function extractParamN(request: Request): string | null {
   ].filter(Boolean) as string[];
 
   for (const raw of headerUrls) {
-    const g = guestFromInvitePath(pathnameOnly(raw));
-    if (g) return g;
+    const pn = pathnameOnly(raw);
+    const fromT = guestFromTokenPath(pn);
+    if (fromT) return fromT;
+    const fromI = guestFromInvitePath(pn);
+    if (fromI) return fromI;
+  }
+
+  for (const raw of headerUrls) {
+    const mt = /[?&]t=([^&]*)/.exec(raw);
+    if (mt) {
+      let seg = mt[1].replace(/\+/g, ' ');
+      try {
+        seg = decodeURIComponent(seg);
+      } catch {
+        /* */
+      }
+      const g = decodeOgToken(seg);
+      if (g) return g;
+    }
   }
 
   for (const raw of headerUrls) {
@@ -62,7 +110,13 @@ function extractParamN(request: Request): string | null {
   for (const raw of headerUrls) {
     if (!raw.startsWith('http')) continue;
     try {
-      const n = new URL(raw).searchParams.get('n');
+      const sp = new URL(raw).searchParams;
+      const t = sp.get('t');
+      if (t) {
+        const g = decodeOgToken(t);
+        if (g) return g;
+      }
+      const n = sp.get('n');
       if (n && n.trim()) return n.trim();
     } catch {
       /* ignore */
@@ -74,6 +128,11 @@ function extractParamN(request: Request): string | null {
       request.url,
       `https://${request.headers.get('host') || 'localhost'}/`
     );
+    const t = u.searchParams.get('t');
+    if (t) {
+      const g = decodeOgToken(t);
+      if (g) return g;
+    }
     const n = u.searchParams.get('n');
     if (n && n.trim()) return n.trim();
   } catch {

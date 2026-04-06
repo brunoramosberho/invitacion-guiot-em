@@ -1,0 +1,13 @@
+{
+  "name": "invitacion-guiot-em",
+  "private": true,
+  "homepage": "https://giot.style",
+  "dependencies": {
+    "@vercel/og": "^0.6.8",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.28",
+    "typescript": "5.6"
+  }
+}

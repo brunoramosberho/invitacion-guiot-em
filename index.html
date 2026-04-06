@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invitación exclusiva · giot × Expresso Martínez · SS26</title>
-  <meta name="description" content="Inauguración de Colección SS26 — giot × Expresso Martínez · Jue 18 Jun 2026, 20:00 h · Expresso Martínez, Chamberí, Madrid. Solo con invitación nominal.">
+  <title>__INVITE_PAGE_TITLE__</title>
+  <meta name="description" content="__INVITE_META_DESCRIPTION__">
   <meta name="author" content="giot × Expresso Martínez">
   <meta name="robots" content="index, follow">
   <meta name="color-scheme" content="dark">
@@ -13,19 +13,19 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="giot × Expresso Martínez">
   <meta property="og:locale" content="es_ES">
-  <meta property="og:title" content="Invitación exclusiva · giot × Expresso Martínez">
-  <meta property="og:description" content="Una invitación nominal a la inauguración SS26. Jue 18 Jun 2026 · 20:00 h · Expresso Martínez · Chamberí, Madrid.">
-  <meta property="og:image" content="assets/og-preview.png">
+  <meta property="og:title" content="__INVITE_OG_TITLE__">
+  <meta property="og:description" content="__INVITE_OG_DESCRIPTION__">
+  <meta property="og:image" content="__INVITE_OG_IMAGE__">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Sobre lacrado giot × EM: invitación exclusiva a la inauguración SS26 en Madrid.">
+  <meta property="og:image:alt" content="__INVITE_OG_ALT__">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Invitación exclusiva · giot × Expresso Martínez">
-  <meta name="twitter:description" content="Inauguración SS26 · 18 Jun 2026 · 20:00 h · Madrid. Solo con invitación nominal.">
-  <meta name="twitter:image" content="assets/og-preview.png">
-  <meta name="twitter:image:alt" content="Sobre lacrado giot × EM, invitación SS26 Madrid.">
+  <meta name="twitter:title" content="__INVITE_TWITTER_TITLE__">
+  <meta name="twitter:description" content="__INVITE_TWITTER_DESCRIPTION__">
+  <meta name="twitter:image" content="__INVITE_TWITTER_IMAGE__">
+  <meta name="twitter:image:alt" content="__INVITE_TWITTER_ALT__">
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -338,35 +338,46 @@ document.getElementById('guestPre').textContent = guest;
 document.getElementById('guestAddr').textContent = guest;
 document.getElementById('guestTicket').textContent = guest;
 
-document.title = `Invitación · ${guest} · giot × EM`;
+document.title = 'Invitación · ' + guest + ' · giot × EM';
 
 (function () {
   var pageUrl = location.href.split('#')[0];
-  var ogUrl = document.createElement('meta');
-  ogUrl.setAttribute('property', 'og:url');
-  ogUrl.setAttribute('content', pageUrl);
-  document.head.appendChild(ogUrl);
-  var u = new URL(pageUrl);
-  u.hash = '';
-  var p = u.pathname;
-  if (!p.endsWith('/')) u.pathname = p.replace(/\/[^/]*$/, '/') || '/';
-  var absImg = new URL('assets/og-preview.png', u.href).href;
-  document.querySelectorAll('meta[property="og:image"], meta[name="twitter:image"]').forEach(function (m) {
-    m.setAttribute('content', absImg);
-  });
-  if (guest !== 'Invitado/a') {
-    var blurb =
+  var ogUrlMeta = document.createElement('meta');
+  ogUrlMeta.setAttribute('property', 'og:url');
+  ogUrlMeta.setAttribute('content', pageUrl);
+  document.head.appendChild(ogUrlMeta);
+
+  var ogImgEl = document.querySelector('meta[property="og:image"]');
+  var ogImg = ogImgEl && ogImgEl.getAttribute('content');
+  if (ogImg && ogImg.indexOf('__INVITE_') === 0) {
+    var u = new URL(pageUrl);
+    u.hash = '';
+    var p = u.pathname;
+    if (!p.endsWith('/')) u.pathname = p.replace(/\/[^/]*$/, '/') || '/';
+    var fallbackImg = new URL('assets/og-preview.png', u.href).href;
+    var desc =
       guest +
       ' — Inauguración SS26 · giot × Expresso Martínez · 18 Jun 2026, 20:00 h · Madrid. Solo con invitación.';
-    var title = 'Invitación exclusiva para ' + guest + ' · giot × Expresso Martínez';
-    document.querySelector('meta[name="description"]')?.setAttribute('content', blurb);
-    document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
-    document.querySelector('meta[property="og:description"]')?.setAttribute('content', blurb);
-    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title);
-    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', blurb);
+    var ogTitle = 'Invitación exclusiva para ' + guest + ' · giot × Expresso Martínez';
     var alt = 'Invitación exclusiva para ' + guest + ': giot × Expresso Martínez, SS26, Madrid.';
+    document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', ogTitle);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', desc);
+    document.querySelector('meta[property="og:image"]')?.setAttribute('content', fallbackImg);
     document.querySelector('meta[property="og:image:alt"]')?.setAttribute('content', alt);
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', ogTitle);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', desc);
+    document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', fallbackImg);
     document.querySelector('meta[name="twitter:image:alt"]')?.setAttribute('content', alt);
+  } else if (ogImg && ogImg.indexOf('http') !== 0 && ogImg.indexOf('/api/og') === -1) {
+    var base = new URL(pageUrl);
+    base.hash = '';
+    var path = base.pathname;
+    if (!path.endsWith('/')) base.pathname = path.replace(/\/[^/]*$/, '/') || '/';
+    var abs = new URL(ogImg || 'assets/og-preview.png', base.href).href;
+    document.querySelectorAll('meta[property="og:image"], meta[name="twitter:image"]').forEach(function (m) {
+      m.setAttribute('content', abs);
+    });
   }
 })();
 

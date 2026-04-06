@@ -228,7 +228,7 @@
   <div id="eScene">
     <p class="pre-lbl">tienes una invitación</p>
     <p class="pre-para">Para:</p>
-    <p class="pre-name">Sofía García</p>
+    <p class="pre-name" id="guestPre"></p>
 
     <div class="env-scene">
       <div class="env-tilt" id="envTilt">
@@ -254,7 +254,7 @@
           </div>
           <div class="env-addr">
             <div class="addr-to">Para</div>
-            <div class="addr-name">Sofía García</div>
+            <div class="addr-name" id="guestAddr"></div>
             <div class="addr-sub">Inauguración SS26 · Madrid</div>
           </div>
 
@@ -288,7 +288,7 @@
         <div class="r-tt">— Invitación Especial —</div>
         <div class="r-cl"><div class="r-ct">giot<span class="x">×</span>EM</div><div class="r-cs">Inauguración de Colección SS26</div></div>
         <div class="rows">
-          <div class="row"><span class="rl">Invitada</span><span class="rd"></span><span class="rv nm">Sofía García</span></div>
+          <div class="row"><span class="rl" id="guestLabel">Invitado/a</span><span class="rd"></span><span class="rv nm" id="guestTicket"></span></div>
           <div class="row"><span class="rl">Colección</span><span class="rd"></span><span class="rv">Seda &amp; Organza</span></div>
           <div class="row"><span class="rl">Fecha</span><span class="rd"></span><span class="rv">Jue 18 Jun 2026</span></div>
           <div class="row"><span class="rl">Hora</span><span class="rd"></span><span class="rv">20:00 h</span></div>
@@ -315,6 +315,11 @@
 </div>
 
 <script>
+const guest = new URLSearchParams(location.search).get('n') || 'Invitado/a';
+document.getElementById('guestPre').textContent = guest;
+document.getElementById('guestAddr').textContent = guest;
+document.getElementById('guestTicket').textContent = guest;
+
 const bc=document.getElementById('rBc');
 [3,1,2,1,3,2,1,3,1,2,3,1,1,2,3,1,2,1,3,1,2,2,1,3,1,2,1,3,2].forEach((w,i)=>{
   const b=document.createElement('div');

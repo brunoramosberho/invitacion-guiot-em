@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/api/og/i/:guest", "destination": "/api/og?n=:guest" },
     { "source": "/", "destination": "/api/invite" },
     { "source": "/index.html", "destination": "/api/invite" }
   ],

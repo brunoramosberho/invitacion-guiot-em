@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
   const ogTitle = `Invitación exclusiva para ${guest} · giot × Expresso Martínez`;
   const description = `${guest} — Inauguración SS26 · giot × Expresso Martínez · 18 Jun 2026, 20:00 h · Madrid. Solo con invitación.`;
   const ogAlt = `Invitación exclusiva para ${guest}: giot × Expresso Martínez, SS26, Madrid.`;
-  const ogImage = `${base}/api/og?n=${encodeURIComponent(guest)}`;
+  const ogImage = `${base}/api/og/i/${encodeURIComponent(guest)}`;
 
   let htmlPath = path.join(__dirname, 'invite-template.html');
   if (!fs.existsSync(htmlPath)) {

@@ -9,7 +9,28 @@ function sanitizeGuest(raw: string | null): string {
   return s || 'Invitado/a';
 }
 
-/** Vercel Edge a veces entrega `request.url` sin query; otras cabeceras conservan ?n=. */
+function pathnameOnly(raw: string): string {
+  try {
+    if (raw.startsWith('http')) return new URL(raw).pathname;
+    return new URL(raw, 'https://placeholder.local').pathname;
+  } catch {
+    return raw.split('?')[0].split('#')[0] || '';
+  }
+}
+
+function guestFromInvitePath(pathname: string): string | null {
+  const m = /\/api\/og\/i\/([^/?#]+)/.exec(pathname);
+  if (!m) return null;
+  try {
+    const g = decodeURIComponent(m[1]);
+    const t = g.normalize('NFKC').trim();
+    return t || null;
+  } catch {
+    return null;
+  }
+}
+
+/** Meta a veces pide la imagen sin ?n= en request.url; el nombre va en /api/og/i/<nombre>. */
 function extractParamN(request: Request): string | null {
   const headerUrls = [
     request.headers.get('x-vercel-forwarded-url'),
@@ -18,6 +39,11 @@ function extractParamN(request: Request): string | null {
     request.headers.get('x-invoke-path'),
     request.url,
   ].filter(Boolean) as string[];
+
+  for (const raw of headerUrls) {
+    const g = guestFromInvitePath(pathnameOnly(raw));
+    if (g) return g;
+  }
 
   for (const raw of headerUrls) {
     const m = /[?&]n=([^&]*)/.exec(raw);

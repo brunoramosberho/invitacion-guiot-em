@@ -2,18 +2,24 @@ import { ImageResponse } from '@vercel/og';
 
 export const config = { runtime: 'edge' };
 
-const FONT_ITALIC =
-  'https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/imfellenglish/IMFeENit28P.ttf';
-const FONT_ROMAN =
-  'https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/imfellenglish/IMFeENrm28P.ttf';
-const FONT_MONO =
-  'https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/ibmplexmono/IBMPlexMono-Medium.ttf';
-
 function sanitizeGuest(raw: string | null): string {
   let s = (raw || 'Invitado/a').normalize('NFKC').trim();
   if (!s) s = 'Invitado/a';
   s = s.replace(/[\x00-\x1f\x7f<>]/g, '').slice(0, 64);
   return s || 'Invitado/a';
+}
+
+async function loadFonts(origin: string) {
+  const base = `${origin}/assets/fonts`;
+  const [italicRes, romanRes, monoRes] = await Promise.all([
+    fetch(`${base}/IMFeENit28P.ttf`),
+    fetch(`${base}/IMFeENrm28P.ttf`),
+    fetch(`${base}/IBMPlexMono-Medium.ttf`),
+  ]);
+  if (!italicRes.ok || !romanRes.ok || !monoRes.ok) {
+    throw new Error('fonts_unavailable');
+  }
+  return Promise.all([italicRes.arrayBuffer(), romanRes.arrayBuffer(), monoRes.arrayBuffer()]);
 }
 
 export default async function handler(request: Request) {
@@ -22,13 +28,19 @@ export default async function handler(request: Request) {
   const nameSize = guest.length <= 18 ? 72 : Math.max(38, 72 - (guest.length - 18) * 2);
   const nameMd = Math.max(22, Math.min(30, Math.round(nameSize * 0.48)));
 
-  const [italicData, romanData, monoData] = await Promise.all([
-    fetch(FONT_ITALIC).then((r) => r.arrayBuffer()),
-    fetch(FONT_ROMAN).then((r) => r.arrayBuffer()),
-    fetch(FONT_MONO).then((r) => r.arrayBuffer()),
-  ]);
+  const origin = new URL(request.url).origin;
 
-  return new ImageResponse(
+  let italicData: ArrayBuffer;
+  let romanData: ArrayBuffer;
+  let monoData: ArrayBuffer;
+  try {
+    [italicData, romanData, monoData] = await loadFonts(origin);
+  } catch {
+    return Response.redirect(new URL('/assets/og-preview.png', request.url), 302);
+  }
+
+  try {
+    return new ImageResponse(
     (
       <div
         style={{
@@ -280,4 +292,7 @@ export default async function handler(request: Request) {
       },
     }
   );
+  } catch {
+    return Response.redirect(new URL('/assets/og-preview.png', request.url), 302);
+  }
 }

@@ -25,6 +25,9 @@ module.exports = async (req, res) => {
   const url = new URL(req.url || '/', `http://${host}`);
   const guest = sanitizeGuest(url.searchParams.get('n'));
 
+  const qs = url.searchParams.toString();
+  const pageUrl = `${base}${qs ? `/?${qs}` : '/'}`;
+
   const pageTitle = `Invitación · ${guest} · giot × EM`;
   const ogTitle = `Invitación exclusiva para ${guest} · giot × Expresso Martínez`;
   const description = `${guest} — Inauguración SS26 · giot × Expresso Martínez · 18 Jun 2026, 20:00 h · Madrid. Solo con invitación.`;
@@ -39,6 +42,7 @@ module.exports = async (req, res) => {
 
   html = html
     .replace(/__INVITE_PAGE_TITLE__/g, escapeHtml(pageTitle))
+    .replace(/__INVITE_PAGE_URL__/g, escapeHtml(pageUrl))
     .replace(/__INVITE_META_DESCRIPTION__/g, escapeHtml(description))
     .replace(/__INVITE_OG_TITLE__/g, escapeHtml(ogTitle))
     .replace(/__INVITE_OG_DESCRIPTION__/g, escapeHtml(description))

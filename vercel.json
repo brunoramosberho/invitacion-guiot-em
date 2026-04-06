@@ -8,6 +8,9 @@
   "functions": {
     "api/invite.js": {
       "includeFiles": "api/invite-template.html"
+    },
+    "api/og.js": {
+      "includeFiles": "assets/fonts/IBMPlexMono-Medium.ttf"
     }
   }
 }

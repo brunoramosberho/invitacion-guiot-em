@@ -5,7 +5,7 @@
   ],
   "functions": {
     "api/invite.js": {
-      "includeFiles": "index.html"
+      "includeFiles": "api/invite-template.html"
     }
   }
 }

@@ -31,7 +31,10 @@ module.exports = async (req, res) => {
   const ogAlt = `Invitación exclusiva para ${guest}: giot × Expresso Martínez, SS26, Madrid.`;
   const ogImage = `${base}/api/og?n=${encodeURIComponent(guest)}`;
 
-  const htmlPath = path.join(process.cwd(), 'index.html');
+  let htmlPath = path.join(__dirname, 'invite-template.html');
+  if (!fs.existsSync(htmlPath)) {
+    htmlPath = path.join(process.cwd(), 'api', 'invite-template.html');
+  }
   let html = fs.readFileSync(htmlPath, 'utf8');
 
   html = html
